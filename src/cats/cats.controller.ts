@@ -23,38 +23,29 @@ import { SuccessInterceptor } from 'src/common/interceptors/success.interceptors
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
 
-  // cats
-  //@UseFilters(HttpExceptionFilter)
   @Get()
-  getAllCat() {
-    //throw new HttpException('api broken', 401);
-    return 'all cats';
+  getCurrentCat() {
+    // 현재 로그인 한 고양이
+    return 'current cat';
   }
 
-  // cats/:id
-  @Get(':id')
-  getOneCat(@Param('id', ParseIntPipe, ValidationPipe) id: number) {
-    console.log('hello, controller');
-    return 'a cat';
-  }
-  // cats
   @Post()
-  createCat(@Body() body: Body) {
-    return;
+  signUp() {
+    return 'signUp';
   }
 
-  @Put(':id')
-  updateCat(@Param('id') id: number, @Body() body: Body) {
-    return;
+  @Post('login')
+  logIn() {
+    return 'logIn';
   }
 
-  @Patch(':id')
-  updatePartialCat(@Param('id') id: number) {
-    return;
+  @Post('logout')
+  logOut() {
+    return 'logOut';
   }
 
-  @Delete(':id')
-  deleteCat(@Param('id') id: number) {
-    return;
+  @Post('upload/cats')
+  uploadCatImg() {
+    return 'uploadImg';
   }
 }

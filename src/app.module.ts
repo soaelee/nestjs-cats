@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import * as mongoose from 'mongoose';
 
 @Module({
   imports: [
@@ -21,9 +22,12 @@ import { LoggerMiddleware } from './common/middlewares/logger.middleware';
   providers: [AppService],
 })
 export class AppModule implements NestModule {
+  private readonly isDev: boolean = process.env.MODE === 'dev';
   configure(consumer: MiddlewareConsumer) {
     // consumer.apply(LoggerMiddleware).forRoutes('cats');
     consumer.apply(LoggerMiddleware).forRoutes('*');
+    // 개발모드일때만 debug log
+    mongoose.set('debug', this.isDev);
   }
 }
 
