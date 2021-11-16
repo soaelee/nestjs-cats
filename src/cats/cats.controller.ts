@@ -3,19 +3,15 @@ import { CatsService } from './cats.service';
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  HttpException,
-  Param,
-  ParseIntPipe,
-  Patch,
   Post,
-  Put,
   UseFilters,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { ValidationPipe } from 'src/pipes/positiveInt.pipe';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptors';
+import { CatRequestDto } from './dtos/cat-request.dto';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -30,8 +26,9 @@ export class CatsController {
   }
 
   @Post()
-  signUp() {
-    return 'signUp';
+  @UsePipes(ValidationPipe)
+  signUp(@Body() body: CatRequestDto) {
+    return this.catsService.signUp(body);
   }
 
   @Post('login')

@@ -11,9 +11,9 @@ export class LoggerMiddleware implements NestMiddleware {
   private logger = new Logger('HTTP');
 
   use(req: Request, res: Response, next: NextFunction) {
-    this.logger.log(
-      `before: ${req.method} ${req.originalUrl} ${req.ip} ${res.statusCode}`,
-    );
+    // this.logger.log(
+    //   `before: ${req.method} ${req.originalUrl} ${req.ip} ${res.statusCode}`,
+    // );
     res.on('finish', () => {
       this.logger.log(
         `after: ${req.method} ${req.originalUrl} ${req.ip} ${res.statusCode}`,

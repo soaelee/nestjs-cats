@@ -22,13 +22,11 @@ import * as mongoose from 'mongoose';
   providers: [AppService],
 })
 export class AppModule implements NestModule {
-  private readonly isDev: boolean = process.env.MODE === 'dev';
+  private readonly isDev: boolean = process.env.MODE === 'dev' ? true : false;
   configure(consumer: MiddlewareConsumer) {
     // consumer.apply(LoggerMiddleware).forRoutes('cats');
     consumer.apply(LoggerMiddleware).forRoutes('*');
     // 개발모드일때만 debug log
-    mongoose.set('debug', this.isDev);
+    mongoose.set('debug', true);
   }
 }
-
-//'mongodb+srv://admin:1234qwer@nestcluster.kq95q.mongodb.net/cats?retryWrites=true&w=majority',
