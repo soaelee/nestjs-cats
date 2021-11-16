@@ -27,6 +27,6 @@ export class AppModule implements NestModule {
     // consumer.apply(LoggerMiddleware).forRoutes('cats');
     consumer.apply(LoggerMiddleware).forRoutes('*');
     // 개발모드일때만 debug log
-    mongoose.set('debug', true);
+    mongoose.set('debug', this.isDev);
   }
 }
