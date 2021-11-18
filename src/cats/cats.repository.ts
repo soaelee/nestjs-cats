@@ -3,6 +3,7 @@ import { Cat } from './cats.schema';
 import { Injectable, HttpException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ReadOnlyCatDto } from './dtos/cat.dto';
 
 @Injectable()
 export class CatsRepository {
@@ -23,5 +24,10 @@ export class CatsRepository {
 
   async findCatByEmail(email: string): Promise<Cat> {
     return await this.catModel.findOne({ email });
+  }
+
+  async findCatByIdWithoutPassword(id: string): Promise<Cat | null> {
+    const cat = await this.catModel.findById(id).select('-password');
+    return cat;
   }
 }
