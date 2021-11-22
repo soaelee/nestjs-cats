@@ -46,7 +46,9 @@ export class Cat extends Document {
   @IsNotEmpty()
   name: string;
 
-  @Prop()
+  @Prop({
+    default: '-',
+  })
   @IsString()
   imgUrl: string;
 
@@ -61,5 +63,6 @@ CatSchema.virtual('readOnlyData').get(function (this: Cat) {
     id: this.id,
     email: this.email,
     name: this.name,
+    imgUrl: this.imgUrl,
   };
 });

@@ -1,3 +1,4 @@
+import { multerOptions } from './../common/utils/multer.options';
 import { Cat } from './cats.schema';
 import { CurrentUser } from './../common/decorators/user.decorator';
 import { JwtAuthGuard } from './../auth/jwt/jwt.guard';
@@ -10,6 +11,8 @@ import {
   Get,
   Post,
   Req,
+  UploadedFile,
+  UploadedFiles,
   UseFilters,
   UseGuards,
   UseInterceptors,
@@ -22,6 +25,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ReadOnlyCatDto } from './dtos/cat.dto';
 import { LoginRequestDto } from 'src/auth/dtos/login.request.dto';
 import { Request } from 'express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -35,7 +39,7 @@ export class CatsController {
   @ApiOperation({ summary: '현재 고양이 가져오기' })
   @Get()
   @UseGuards(JwtAuthGuard)
-  getCurrentCat(@CurrentUser() cat: Cat) {
+  getCurrentCat(@CurrentUser() cat: Cat): ReadOnlyCatDto {
     // 현재 로그인 한 고양이
     return cat.readOnlyData;
   }
@@ -48,13 +52,17 @@ export class CatsController {
   @ApiOperation({ summary: '회원가입' })
   @Post()
   @UsePipes(ValidationPipe)
-  signUp(@Body() body: CatRequestDto) {
+  signUp(@Body() body: CatRequestDto): Promise<ReadOnlyCatDto> {
     return this.catsService.signUp(body);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Successed!',
+  })
   @ApiOperation({ summary: '로그인' })
   @Post('login')
-  logIn(@Body() body: LoginRequestDto) {
+  logIn(@Body() body: LoginRequestDto): Promise<{ token: string }> {
     return this.authService.jwtLogin(body);
   }
 
@@ -65,8 +73,22 @@ export class CatsController {
   }
 
   @ApiOperation({ summary: '고양이 이미지 업로드' })
-  @Post('upload/cats')
-  uploadCatImg() {
-    return 'uploadImg';
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats')))
+  @Post('upload')
+  uploadCatImg(
+    @CurrentUser() cat: Cat,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ): Promise<ReadOnlyCatDto> {
+    console.log(files);
+    //return { image: `http://localhost:8000/media/cats/${files[0].filename}` };
+    return this.catsService.uploadImg(cat, files);
+  }
+
+  @ApiOperation({ summary: '모든 고양이 가져오기' })
+  @UseGuards(JwtAuthGuard)
+  @Get('all')
+  getAllCat(): Promise<ReadOnlyCatDto[]> {
+    return this.catsService.getAllCats();
   }
 }

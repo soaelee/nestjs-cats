@@ -13,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async jwtLogin(data: LoginRequestDto) {
+  async jwtLogin(data: LoginRequestDto): Promise<{ token: string }> {
     const { email, password } = data;
     //* 해당하는 email이 존재하는지
     const cat = await this.catsRepository.findCatByEmail(email);
