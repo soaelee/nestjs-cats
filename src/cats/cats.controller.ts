@@ -24,8 +24,7 @@ import { CatRequestDto } from './dtos/cat-request.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ReadOnlyCatDto } from './dtos/cat.dto';
 import { LoginRequestDto } from 'src/auth/dtos/login.request.dto';
-import { Request } from 'express';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -41,6 +40,7 @@ export class CatsController {
   @UseGuards(JwtAuthGuard)
   getCurrentCat(@CurrentUser() cat: Cat): ReadOnlyCatDto {
     // 현재 로그인 한 고양이
+    console.log(cat);
     return cat.readOnlyData;
   }
 

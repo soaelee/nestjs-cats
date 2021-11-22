@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { Cat } from 'src/cats/cats.schema';
@@ -29,9 +37,8 @@ export class CommentsController {
 
   @ApiOperation({ summary: '좋아요 수 올리기' })
   @UseGuards(JwtAuthGuard)
-  @Post(':id')
-  plusLike(@CurrentUser() cat: Cat, @Param('id') id: string) {
-    console.log(cat);
-    return this.commentsService.plusLike(cat, id);
+  @Patch(':id')
+  plusLike(@Param('id') id: string) {
+    return this.commentsService.plusLike(id);
   }
 }
