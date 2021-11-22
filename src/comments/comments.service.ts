@@ -18,4 +18,8 @@ export class CommentsService {
   ): Promise<string> {
     return 'success';
   }
+
+  async plusLike(cat: Cat, id: string): Promise<string> {
+    return 'success';
+  }
 }

@@ -23,6 +23,15 @@ export class CommentsController {
     @Param('id') id: string,
     @Body() body: CommentRequestDto,
   ) {
+    console.log(cat);
     return this.commentsService.createComment(cat, id, body);
+  }
+
+  @ApiOperation({ summary: '좋아요 수 올리기' })
+  @UseGuards(JwtAuthGuard)
+  @Post(':id')
+  plusLike(@CurrentUser() cat: Cat, @Param('id') id: string) {
+    console.log(cat);
+    return this.commentsService.plusLike(cat, id);
   }
 }
